@@ -45,14 +45,6 @@ function reducer(state, action) {
   }
 }
 
-// Mock user database (simulated)
-const MOCK_USERS = [
-  { id: 'u1', email: 'donor@feedlink.in', password: 'password', name: 'Raj Sharma', role: 'donor', avatar: '🍽️', org: 'Taj Palace Kitchen', city: 'Delhi', phone: '+91 98100 11111', verified: true },
-  { id: 'u2', email: 'ngo@feedlink.in', password: 'password', name: 'Priya Singh', role: 'ngo', avatar: '🏥', org: 'Akshaya Patra Foundation', city: 'Bangalore', phone: '+91 98808 22222', verified: true },
-  { id: 'u3', email: 'volunteer@feedlink.in', password: 'password', name: 'Arjun Patel', role: 'volunteer', avatar: '🚴', org: 'Independent', city: 'Mumbai', phone: '+91 98200 33333', verified: true },
-  { id: 'u4', email: 'admin@feedlink.in', password: 'admin123', name: 'Admin User', role: 'admin', avatar: '👨‍💼', org: 'FeedLink HQ', city: 'Delhi', phone: '+91 98100 00000', verified: true },
-];
-
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [hydrated, setHydrated] = useState(false);
@@ -64,7 +56,7 @@ export function AppProvider({ children }) {
       dispatch({ type: 'INIT_DATA', payload: donations });
     }
 
-    // Restore user session
+    // Restore user session from localStorage (session persistence only)
     try {
       const savedUser = localStorage.getItem('feedlink_user');
       if (savedUser) {
@@ -75,7 +67,7 @@ export function AppProvider({ children }) {
     setHydrated(true);
   }, [state.initialized]);
 
-  // Persist user session
+  // Persist user session to localStorage (session persistence only)
   useEffect(() => {
     if (hydrated) {
       if (state.user) {
@@ -86,49 +78,45 @@ export function AppProvider({ children }) {
     }
   }, [state.user, hydrated]);
 
-  const login = (email, password) => {
-    // Check mock database
-    const user = MOCK_USERS.find(u => u.email === email && u.password === password);
-    if (user) {
-      const { password: _, ...safeUser } = user;
-      dispatch({ type: 'LOGIN', payload: safeUser });
-      return { success: true, user: safeUser };
-    }
-    // Check localStorage registered users
+  // Login via PostgreSQL API
+  const login = async (email, password) => {
     try {
-      const registeredUsers = JSON.parse(localStorage.getItem('feedlink_registered') || '[]');
-      const regUser = registeredUsers.find(u => u.email === email && u.password === password);
-      if (regUser) {
-        const { password: _, ...safeUser } = regUser;
-        dispatch({ type: 'LOGIN', payload: safeUser });
-        return { success: true, user: safeUser };
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        dispatch({ type: 'LOGIN', payload: data.user });
+        return { success: true, user: data.user };
       }
-    } catch (e) { /* ignore */ }
-    return { success: false, error: 'Invalid email or password' };
+      return { success: false, error: data.error || 'Invalid email or password' };
+    } catch (error) {
+      console.error('Login error:', error);
+      return { success: false, error: 'Network error. Please try again.' };
+    }
   };
 
-  const signup = (userData) => {
-    // Check if email exists
-    const exists = MOCK_USERS.some(u => u.email === userData.email);
+  // Signup via PostgreSQL API
+  const signup = async (userData) => {
     try {
-      const registeredUsers = JSON.parse(localStorage.getItem('feedlink_registered') || '[]');
-      const regExists = registeredUsers.some(u => u.email === userData.email);
-      if (exists || regExists) {
-        return { success: false, error: 'Email already registered' };
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        dispatch({ type: 'LOGIN', payload: data.user });
+        return { success: true, user: data.user };
       }
-      const newUser = {
-        id: `u_${Date.now()}`,
-        ...userData,
-        verified: false,
-        avatar: { donor: '🍽️', ngo: '🏥', volunteer: '🚴', admin: '👨‍💼', beneficiary: '🤲', corporate: '🏢' }[userData.role] || '👤',
-      };
-      registeredUsers.push(newUser);
-      localStorage.setItem('feedlink_registered', JSON.stringify(registeredUsers));
-      const { password: _, ...safeUser } = newUser;
-      dispatch({ type: 'LOGIN', payload: safeUser });
-      return { success: true, user: safeUser };
-    } catch (e) {
-      return { success: false, error: 'Registration failed' };
+      return { success: false, error: data.error || 'Registration failed' };
+    } catch (error) {
+      console.error('Signup error:', error);
+      return { success: false, error: 'Network error. Please try again.' };
     }
   };
 

@@ -43,22 +43,24 @@ export default function AuthPage() {
     setError('');
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    setTimeout(() => {
-      const result = login(formData.email, formData.password);
+    try {
+      const result = await login(formData.email, formData.password);
       if (result.success) {
         router.push(ROLE_REDIRECTS[result.user.role] || '/');
       } else {
         setError(result.error);
       }
-      setLoading(false);
-    }, 800); // Simulate API delay
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+    }
+    setLoading(false);
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -79,8 +81,8 @@ export default function AuthPage() {
       return;
     }
 
-    setTimeout(() => {
-      const result = signup({
+    try {
+      const result = await signup({
         name: formData.name,
         email: formData.email,
         password: formData.password,
@@ -94,8 +96,10 @@ export default function AuthPage() {
       } else {
         setError(result.error);
       }
-      setLoading(false);
-    }, 800);
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+    }
+    setLoading(false);
   };
 
   const fillDemo = (role) => {
