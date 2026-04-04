@@ -1,6 +1,6 @@
 import './globals.css';
-import Navbar from '@/components/Navbar';
-import { AppProvider } from '@/context/AppContext';
+import Navbar from '../components/Navbar';
+import { AppProvider } from '../context/AppContext';
 
 export const metadata = {
   title: 'FeedLink — Connecting Food to People Who Need It',

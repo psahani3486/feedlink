@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
-import { COMMUNITY_FRIDGES, FRIDGE_HISTORY } from '@/data/extendedData';
-import StatsCard from '@/components/StatsCard';
-import { LineChart, BarChart } from '@/components/Charts';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { COMMUNITY_FRIDGES, FRIDGE_HISTORY } from '../../data/extendedData';
+import StatsCard from '../../components/StatsCard';
+import { LineChart, BarChart } from '../../components/Charts';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 export default function FridgeDashboard() {
   const [selectedFridge, setSelectedFridge] = useState(COMMUNITY_FRIDGES[0]);

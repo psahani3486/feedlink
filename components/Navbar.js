@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useApp } from '@/context/AppContext';
+import { useApp } from '../context/AppContext';
 
 // All navigation items with role restrictions
 const ALL_NAV_ITEMS = [

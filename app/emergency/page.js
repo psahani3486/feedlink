@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
-import { DISASTER_EVENTS, EMERGENCY_CAMPS } from '@/data/extendedData';
-import StatsCard from '@/components/StatsCard';
-import { BarChart } from '@/components/Charts';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { DISASTER_EVENTS, EMERGENCY_CAMPS } from '../../data/extendedData';
+import StatsCard from '../../components/StatsCard';
+import { BarChart } from '../../components/Charts';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 const DISASTER_ICONS = { flood: '🌊', heatwave: '🔥', earthquake: '🏚️', cyclone: '🌀', pandemic: '🦠', riot: '⚠️' };
 const SEVERITY_COLORS = { critical: '#ef4444', high: '#f59e0b', medium: '#06b6d4', low: '#22c55e' };

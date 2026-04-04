@@ -1,10 +1,10 @@
 'use client';
 import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { useApp } from '@/context/AppContext';
-import { DONORS, NGOS, VOLUNTEERS, ANALYTICS } from '@/data/mockData';
+import { useApp } from '../../context/AppContext';
+import { DONORS, NGOS, VOLUNTEERS, ANALYTICS } from '../../data/mockData';
 
-const MapWrapper = dynamic(() => import('@/components/MapComponent'), { ssr: false });
+const MapWrapper = dynamic(() => import('../../components/MapComponent'), { ssr: false });
 const DynCircle = dynamic(() => import('react-leaflet').then(m => m.CircleMarker), { ssr: false });
 const DynPopup = dynamic(() => import('react-leaflet').then(m => m.Popup), { ssr: false });
 

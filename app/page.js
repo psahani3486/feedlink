@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import StatsCard from '@/components/StatsCard';
-import { generateActivityFeed, ANALYTICS } from '@/data/mockData';
+import StatsCard from '../components/StatsCard';
+import { generateActivityFeed, ANALYTICS } from '../data/mockData';
 
 const IMPACT_STATS = [
   { icon: '🍛', value: 128940, label: 'Meals Delivered', trend: '+12% this month', color: '#10b981' },

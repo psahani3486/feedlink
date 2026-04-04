@@ -1,10 +1,10 @@
 'use client';
 import { useState, useMemo } from 'react';
-import { useApp } from '@/context/AppContext';
-import { VOLUNTEERS, GAMIFICATION_BADGES } from '@/data/mockData';
+import { useApp } from '../../context/AppContext';
+import { VOLUNTEERS, GAMIFICATION_BADGES } from '../../data/mockData';
 import { QRCodeSVG } from 'qrcode.react';
-import StatsCard from '@/components/StatsCard';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import StatsCard from '../../components/StatsCard';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 export default function VolunteerPanel() {
   const { state, dispatch } = useApp();

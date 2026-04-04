@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useApp } from '@/context/AppContext';
+import { useApp } from '../../context/AppContext';
 
 const ROLES = [
   { value: 'donor', label: 'Donor / Restaurant', icon: '🍽️', desc: 'Donate surplus food from your kitchen', color: '#10b981' },

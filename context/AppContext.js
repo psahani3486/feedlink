@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useContext, useReducer, useEffect, useState } from 'react';
-import { generateDonations, DONORS, NGOS, VOLUNTEERS, ANALYTICS, NOTIFICATIONS } from '@/data/mockData';
+import { generateDonations, DONORS, NGOS, VOLUNTEERS, ANALYTICS, NOTIFICATIONS } from '../data/mockData';
 
 const AppContext = createContext();
 

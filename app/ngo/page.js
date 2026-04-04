@@ -1,11 +1,11 @@
 'use client';
 import { useState, useMemo } from 'react';
-import { useApp } from '@/context/AppContext';
-import { NGOS, FOOD_CATEGORIES } from '@/data/mockData';
-import { forecastWeekly } from '@/ai/demandPredict';
-import StatsCard from '@/components/StatsCard';
-import { BarChart, LineChart } from '@/components/Charts';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { useApp } from '../../context/AppContext';
+import { NGOS, FOOD_CATEGORIES } from '../../data/mockData';
+import { forecastWeekly } from '../../ai/demandPredict';
+import StatsCard from '../../components/StatsCard';
+import { BarChart, LineChart } from '../../components/Charts';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 export default function NGODashboard() {
   const { state, dispatch } = useApp();

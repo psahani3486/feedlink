@@ -1,12 +1,12 @@
 'use client';
 import { useMemo } from 'react';
-import { useApp } from '@/context/AppContext';
-import { ANALYTICS, NGOS } from '@/data/mockData';
-import { FRAUD_ALERTS_DETAILED, TRUST_SCORES, REDISTRIBUTION_REQUESTS } from '@/data/extendedData';
-import { generateFraudReport } from '@/ai/fraudDetection';
-import StatsCard from '@/components/StatsCard';
-import { BarChart, LineChart, DoughnutChart } from '@/components/Charts';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { useApp } from '../../context/AppContext';
+import { ANALYTICS, NGOS } from '../../data/mockData';
+import { FRAUD_ALERTS_DETAILED, TRUST_SCORES, REDISTRIBUTION_REQUESTS } from '../../data/extendedData';
+import { generateFraudReport } from '../../ai/fraudDetection';
+import StatsCard from '../../components/StatsCard';
+import { BarChart, LineChart, DoughnutChart } from '../../components/Charts';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 export default function AdminDashboard() {
   const { state } = useApp();

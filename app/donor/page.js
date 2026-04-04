@@ -1,11 +1,11 @@
 'use client';
 import { useState, useMemo } from 'react';
-import { useApp } from '@/context/AppContext';
-import { FOOD_CATEGORIES, DONORS, NGOS } from '@/data/mockData';
-import { predictShelfLife, getPackagingInstructions } from '@/ai/shelfLife';
-import { matchDonorToNGOs } from '@/ai/smartMatch';
-import StatsCard from '@/components/StatsCard';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { useApp } from '../../context/AppContext';
+import { FOOD_CATEGORIES, DONORS, NGOS } from '../../data/mockData';
+import { predictShelfLife, getPackagingInstructions } from '../../ai/shelfLife';
+import { matchDonorToNGOs } from '../../ai/smartMatch';
+import StatsCard from '../../components/StatsCard';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 export default function DonorDashboard() {
   const { state, dispatch } = useApp();

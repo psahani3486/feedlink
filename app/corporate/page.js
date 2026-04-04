@@ -1,10 +1,10 @@
 'use client';
 import { useState, useMemo } from 'react';
-import { CORPORATE_SPONSORS, CSR_MONTHLY } from '@/data/extendedData';
-import { generateESGReport } from '@/ai/sustainability';
-import StatsCard from '@/components/StatsCard';
-import { LineChart, BarChart, DoughnutChart } from '@/components/Charts';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { CORPORATE_SPONSORS, CSR_MONTHLY } from '../../data/extendedData';
+import { generateESGReport } from '../../ai/sustainability';
+import StatsCard from '../../components/StatsCard';
+import { LineChart, BarChart, DoughnutChart } from '../../components/Charts';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 export default function CorporateDashboard() {
   const [selectedCompany, setSelectedCompany] = useState(CORPORATE_SPONSORS[0]);

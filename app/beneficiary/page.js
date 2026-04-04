@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
-import { BENEFICIARY_PROFILES, MEAL_SLOTS, COMMUNITY_FRIDGES } from '@/data/extendedData';
-import StatsCard from '@/components/StatsCard';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { BENEFICIARY_PROFILES, MEAL_SLOTS, COMMUNITY_FRIDGES } from '../../data/extendedData';
+import StatsCard from '../../components/StatsCard';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 export default function BeneficiaryDashboard() {
   const [selectedProfile] = useState(BENEFICIARY_PROFILES[0]);

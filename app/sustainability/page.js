@@ -1,9 +1,9 @@
 'use client';
 import { useMemo } from 'react';
-import { SUSTAINABILITY_METRICS } from '@/data/extendedData';
-import { calculateCarbonImpact, getSDGImpact } from '@/ai/sustainability';
-import StatsCard from '@/components/StatsCard';
-import { LineChart, BarChart, DoughnutChart } from '@/components/Charts';
+import { SUSTAINABILITY_METRICS } from '../../data/extendedData';
+import { calculateCarbonImpact, getSDGImpact } from '../../ai/sustainability';
+import StatsCard from '../../components/StatsCard';
+import { LineChart, BarChart, DoughnutChart } from '../../components/Charts';
 
 export default function SustainabilityDashboard() {
   const metrics = useMemo(() => calculateCarbonImpact(SUSTAINABILITY_METRICS.foodWasteReduced), []);
