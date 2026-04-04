@@ -726,7 +726,31 @@ tr:last-child td { border-bottom: none; }
   }
   .navbar-links.open { display: flex; }
   .navbar-mobile-toggle { display: flex; }
+
+  /* Profile dropdown — bottom sheet on mobile */
+  .profile-dropdown {
+    top: auto !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0 !important;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideInUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  }
+
+  /* Hide username text on mobile to save space */
+  .hide-xs {
+    display: none;
+  }
 }
+
+@keyframes slideInUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 
 /* ---- Landing Specific ---- */
 .hero { 
