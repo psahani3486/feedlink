@@ -1,25 +1,31 @@
 'use client';
 import { createContext, useContext, useReducer, useEffect, useState } from 'react';
-import { generateDonations, DONORS, NGOS, VOLUNTEERS, ANALYTICS, NOTIFICATIONS } from '../data/mockData';
+import { ANALYTICS, FOOD_CATEGORIES, GAMIFICATION_BADGES, ACTIVITY_FEED_TEMPLATES, CITIES } from '../data/mockData';
 
 const AppContext = createContext();
 
 const initialState = {
   donations: [],
-  donors: DONORS,
-  ngos: NGOS,
-  volunteers: VOLUNTEERS,
+  donors: [],
+  ngos: [],
+  volunteers: [],
   analytics: ANALYTICS,
-  notifications: NOTIFICATIONS,
+  notifications: [],
+  fridges: [],
+  beneficiaries: [],
+  sponsors: [],
+  disasters: [],
+  camps: [],
   currentRole: null,
   user: null,
   initialized: false,
+  dataLoading: true,
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case 'INIT_DATA':
-      return { ...state, donations: action.payload, initialized: true };
+      return { ...state, ...action.payload, initialized: true, dataLoading: false };
     case 'ADD_DONATION':
       return { ...state, donations: [action.payload, ...state.donations] };
     case 'UPDATE_DONATION':
@@ -49,14 +55,42 @@ export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [hydrated, setHydrated] = useState(false);
 
-  // Initialize data + restore session from localStorage
+  // Fetch all data from PostgreSQL on mount
   useEffect(() => {
+    async function loadData() {
+      try {
+        const res = await fetch('/api/data');
+        const json = await res.json();
+        if (json.success) {
+          dispatch({
+            type: 'INIT_DATA',
+            payload: {
+              donations: json.data.donations,
+              donors: json.data.donors,
+              ngos: json.data.ngos,
+              volunteers: json.data.volunteers,
+              notifications: json.data.notifications,
+              fridges: json.data.fridges,
+              beneficiaries: json.data.beneficiaries,
+              sponsors: json.data.sponsors,
+              disasters: json.data.disasters,
+              camps: json.data.camps,
+            },
+          });
+        } else {
+          // Fallback: mark as initialized even if API fails
+          dispatch({ type: 'INIT_DATA', payload: { donations: [] } });
+        }
+      } catch (e) {
+        console.error('Failed to load data from API:', e);
+        dispatch({ type: 'INIT_DATA', payload: { donations: [] } });
+      }
+    }
     if (!state.initialized) {
-      const donations = generateDonations(50);
-      dispatch({ type: 'INIT_DATA', payload: donations });
+      loadData();
     }
 
-    // Restore user session from localStorage (session persistence only)
+    // Restore user session from localStorage
     try {
       const savedUser = localStorage.getItem('feedlink_user');
       if (savedUser) {
@@ -67,7 +101,7 @@ export function AppProvider({ children }) {
     setHydrated(true);
   }, [state.initialized]);
 
-  // Persist user session to localStorage (session persistence only)
+  // Persist user session to localStorage
   useEffect(() => {
     if (hydrated) {
       if (state.user) {
@@ -87,14 +121,12 @@ export function AppProvider({ children }) {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-
       if (data.success) {
         dispatch({ type: 'LOGIN', payload: data.user });
         return { success: true, user: data.user };
       }
       return { success: false, error: data.error || 'Invalid email or password' };
     } catch (error) {
-      console.error('Login error:', error);
       return { success: false, error: 'Network error. Please try again.' };
     }
   };
@@ -108,14 +140,12 @@ export function AppProvider({ children }) {
         body: JSON.stringify(userData),
       });
       const data = await res.json();
-
       if (data.success) {
         dispatch({ type: 'LOGIN', payload: data.user });
         return { success: true, user: data.user };
       }
       return { success: false, error: data.error || 'Registration failed' };
     } catch (error) {
-      console.error('Signup error:', error);
       return { success: false, error: 'Network error. Please try again.' };
     }
   };

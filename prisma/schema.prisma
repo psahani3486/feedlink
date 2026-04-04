@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client"
   output   = "../app/generated/prisma"
@@ -23,4 +20,155 @@ model User {
   verified  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Donor {
+  id             String @id
+  name           String
+  type           String
+  city           String
+  lat            Float
+  lng            Float
+  rating         Float
+  totalDonations Int
+  contact        String
+}
+
+model Ngo {
+  id            String @id
+  name          String
+  city          String
+  lat           Float
+  lng           Float
+  capacity      Int
+  currentLoad   Int
+  speciality    String
+  rating        Float
+  contact       String
+  beneficiaries Int
+}
+
+model Volunteer {
+  id         String  @id
+  name       String
+  city       String
+  lat        Float
+  lng        Float
+  rating     Float
+  deliveries Int
+  points     Int
+  available  Boolean
+  badges     String  @default("[]")
+}
+
+model Donation {
+  id             String   @id
+  donorId        String
+  donorName      String
+  donorCity      String
+  foodCategory   String
+  foodName       String
+  foodEmoji      String
+  quantity       Int
+  unit           String
+  status         String   @default("pending")
+  ngoId          String?
+  ngoName        String?
+  volunteerId    String?
+  volunteerName  String?
+  qrCode         String
+  shelfLifeHours Int
+  temperature    Int
+  lat            Float
+  lng            Float
+  notes          String   @default("")
+  urgency        String
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime
+}
+
+model Notification {
+  id      String  @id @default(cuid())
+  type    String
+  message String
+  time    String
+  read    Boolean @default(false)
+}
+
+model CommunityFridge {
+  id           String @id
+  name         String
+  city         String
+  lat          Float
+  lng          Float
+  fillLevel    Int
+  temperature  Float
+  status       String
+  capacity     Int
+  currentItems Int
+  lastRefill   String
+  spoilageRisk String
+  dailyUsage   Int
+  installDate  String
+}
+
+model BeneficiaryProfile {
+  id            String @id
+  type          String
+  name          String
+  city          String
+  lat           Float
+  lng           Float
+  members       Int
+  dietary       String
+  priority      String
+  needsPerDay   Int
+  reservedSlots Int
+  contact       String
+}
+
+model CorporateSponsor {
+  id             String @id
+  name           String
+  logo           String
+  sector         String
+  totalSponsored Int
+  mealsSponsored Int
+  co2Saved       Int
+  csrBudget      Int
+  sdgScore       Int
+  since          String
+  tier           String
+}
+
+model DisasterEvent {
+  id                 String @id
+  type               String
+  title              String
+  city               String
+  lat                Float
+  lng                Float
+  severity           String
+  affectedPeople     Int
+  status             String
+  startDate          String
+  campsSetup         Int
+  mealsServed        Int
+  volunteersDeployed Int
+  description        String
+}
+
+model EmergencyCamp {
+  id           String @id
+  name         String
+  eventId      String
+  lat          Float
+  lng          Float
+  capacity     Int
+  current      Int
+  mealsToday   Int
+  status       String
+  supplyWater  Int
+  supplyFood   Int
+  supplyMedical Int
 }
