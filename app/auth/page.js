@@ -25,6 +25,7 @@ export default function AuthPage() {
   const [selectedRole, setSelectedRole] = useState('donor');
   const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '', org: '', city: '', phone: '' });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const { login, signup, state } = useApp();
   const router = useRouter();
@@ -41,6 +42,7 @@ export default function AuthPage() {
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError('');
+    setSuccess('');
   };
 
   const handleLogin = async (e) => {
@@ -92,7 +94,9 @@ export default function AuthPage() {
         phone: formData.phone || '',
       });
       if (result.success) {
-        router.push(ROLE_REDIRECTS[result.user.role] || '/');
+        setMode('login');
+        setSuccess('Account created successfully! Please sign in.');
+        setFormData({ ...formData, name: '', password: '', confirmPassword: '', org: '', city: '', phone: '' });
       } else {
         setError(result.error);
       }
@@ -148,6 +152,13 @@ export default function AuthPage() {
         </div>
 
         <div className="card" style={{ padding: '2rem' }}>
+
+          {/* Success Message */}
+          {success && (
+            <div style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 'var(--radius-md)', padding: '0.75rem 1rem', marginBottom: '1.25rem', color: '#10b981', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              ✅ {success}
+            </div>
+          )}
 
           {/* Error Message */}
           {error && (

@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useReducer, useEffect, useState } from 'react';
+import { createContext, useContext, useReducer, useEffect, useState, useCallback } from 'react';
 import { ANALYTICS, FOOD_CATEGORIES, GAMIFICATION_BADGES, ACTIVITY_FEED_TEMPLATES, CITIES } from '../data/mockData';
 
 const AppContext = createContext();
@@ -51,9 +51,76 @@ function reducer(state, action) {
   }
 }
 
+// Sync a dispatch action to the database
+async function syncToDatabase(action) {
+  try {
+    switch (action.type) {
+      case 'ADD_DONATION': {
+        await fetch('/api/donations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(action.payload),
+        });
+        break;
+      }
+      case 'ACCEPT_DONATION': {
+        const { donationId, ngoId, ngoName } = action.payload;
+        await fetch('/api/donations', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: donationId, status: 'accepted', ngoId, ngoName }),
+        });
+        break;
+      }
+      case 'ASSIGN_VOLUNTEER': {
+        const { donationId, volunteerId, volunteerName } = action.payload;
+        await fetch('/api/donations', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: donationId, status: 'picked_up', volunteerId, volunteerName }),
+        });
+        break;
+      }
+      case 'UPDATE_STATUS': {
+        await fetch('/api/donations', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: action.payload.donationId, status: action.payload.status }),
+        });
+        break;
+      }
+      case 'UPDATE_DONATION': {
+        const { id, ...updates } = action.payload;
+        await fetch('/api/donations', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, ...updates }),
+        });
+        break;
+      }
+      // These don't need DB sync
+      case 'INIT_DATA':
+      case 'SET_ROLE':
+      case 'LOGIN':
+      case 'LOGOUT':
+      case 'UPDATE_PROFILE':
+      case 'ADD_NOTIFICATION':
+        break;
+    }
+  } catch (error) {
+    console.error(`Failed to sync ${action.type} to database:`, error);
+  }
+}
+
 export function AppProvider({ children }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, rawDispatch] = useReducer(reducer, initialState);
   const [hydrated, setHydrated] = useState(false);
+
+  // Wrapped dispatch that syncs mutations to PostgreSQL
+  const dispatch = useCallback((action) => {
+    rawDispatch(action);
+    syncToDatabase(action);
+  }, []);
 
   // Fetch all data from PostgreSQL on mount
   useEffect(() => {
@@ -62,7 +129,7 @@ export function AppProvider({ children }) {
         const res = await fetch('/api/data');
         const json = await res.json();
         if (json.success) {
-          dispatch({
+          rawDispatch({
             type: 'INIT_DATA',
             payload: {
               donations: json.data.donations,
@@ -78,12 +145,11 @@ export function AppProvider({ children }) {
             },
           });
         } else {
-          // Fallback: mark as initialized even if API fails
-          dispatch({ type: 'INIT_DATA', payload: { donations: [] } });
+          rawDispatch({ type: 'INIT_DATA', payload: { donations: [] } });
         }
       } catch (e) {
         console.error('Failed to load data from API:', e);
-        dispatch({ type: 'INIT_DATA', payload: { donations: [] } });
+        rawDispatch({ type: 'INIT_DATA', payload: { donations: [] } });
       }
     }
     if (!state.initialized) {
@@ -95,7 +161,7 @@ export function AppProvider({ children }) {
       const savedUser = localStorage.getItem('feedlink_user');
       if (savedUser) {
         const user = JSON.parse(savedUser);
-        dispatch({ type: 'LOGIN', payload: user });
+        rawDispatch({ type: 'LOGIN', payload: user });
       }
     } catch (e) { /* ignore */ }
     setHydrated(true);
@@ -122,7 +188,7 @@ export function AppProvider({ children }) {
       });
       const data = await res.json();
       if (data.success) {
-        dispatch({ type: 'LOGIN', payload: data.user });
+        rawDispatch({ type: 'LOGIN', payload: data.user });
         return { success: true, user: data.user };
       }
       return { success: false, error: data.error || 'Invalid email or password' };
@@ -131,7 +197,7 @@ export function AppProvider({ children }) {
     }
   };
 
-  // Signup via PostgreSQL API
+  // Signup via PostgreSQL API (does NOT auto-login)
   const signup = async (userData) => {
     try {
       const res = await fetch('/api/auth/signup', {
@@ -141,7 +207,6 @@ export function AppProvider({ children }) {
       });
       const data = await res.json();
       if (data.success) {
-        dispatch({ type: 'LOGIN', payload: data.user });
         return { success: true, user: data.user };
       }
       return { success: false, error: data.error || 'Registration failed' };
@@ -151,7 +216,7 @@ export function AppProvider({ children }) {
   };
 
   const logout = () => {
-    dispatch({ type: 'LOGOUT' });
+    rawDispatch({ type: 'LOGOUT' });
   };
 
   return (

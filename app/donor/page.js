@@ -31,14 +31,18 @@ export default function DonorDashboard() {
 
   const handleSubmit = () => {
     const food = FOOD_CATEGORIES.find(f => f.id === form.foodCategory);
+    const shelfHours = shelfPrediction?.estimatedHours || food.shelfHours;
+    const now = new Date();
     const newDonation = {
       id: `DON-${String(state.donations.length + 1).padStart(4, '0')}`,
       donorId: selectedDonor.id, donorName: selectedDonor.name, donorCity: selectedDonor.city,
       foodCategory: form.foodCategory, foodName: food.name, foodEmoji: food.emoji,
       quantity: parseInt(form.quantity), unit: form.unit, status: 'pending',
       qrCode: `FL-QR-NEW-${Date.now().toString(36)}`,
-      createdAt: new Date().toISOString(), temperature: form.temperature,
-      shelfLifeHours: shelfPrediction?.estimatedHours || food.shelfHours,
+      createdAt: now.toISOString(),
+      expiresAt: new Date(now.getTime() + shelfHours * 3600000).toISOString(),
+      temperature: form.temperature,
+      shelfLifeHours: shelfHours,
       lat: selectedDonor.lat, lng: selectedDonor.lng,
       urgency: food.shelfHours <= 4 ? 'high' : food.shelfHours <= 12 ? 'medium' : 'low',
       notes: form.notes,
