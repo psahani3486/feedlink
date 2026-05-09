@@ -281,13 +281,12 @@ CREATE TABLE iot_sensor_data (
 
 Add your project screenshots here.
 
-```md
-![Donor Dashboard](public/donor_dashboard.png)
-![NGO Dashboard](public/ngo_dashboard.png)
-![Volunteer Dashboard](public/volunteer_dashboard.png)
-![Admin Dashboard](public/admin_dashboard.png)
-```
+## 📸 Screenshots
 
+![Donor Dashboard](./public/donor_dashboard.png)
+![NGO Dashboard](./public/ngo_dashboard.png)
+![Volunteer Dashboard](./public/volunteer_dashboard.png)
+![Admin Dashboard](./public/admin_dashboard.png)
 ---
 
 ##  Local Setup
