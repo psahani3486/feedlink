@@ -5,10 +5,10 @@ import StatsCard from '../components/StatsCard';
 import { generateActivityFeed, ANALYTICS } from '../data/mockData';
 
 const IMPACT_STATS = [
-  { icon: '🍛', value: 128940, label: 'Meals Delivered', trend: '+12% this month', color: '#10b981' },
-  { icon: '📦', value: 45678, label: 'Kg Food Saved', trend: '+8% this month', color: '#06b6d4' },
-  { icon: '🌍', value: 12340, label: 'Kg CO₂ Reduced', trend: '+15% this month', color: '#8b5cf6' },
-  { icon: '🤝', value: 487, label: 'Active Volunteers', trend: '+23 this week', color: '#f59e0b' },
+  { icon: '🍛', value: 128940, label: 'Meals Delivered', trend: '+12% this month', color: '#00ff9f' },
+  { icon: '📦', value: 45678, label: 'Kg Food Saved', trend: '+8% this month', color: '#00b8ff' },
+  { icon: '🌍', value: 12340, label: 'Kg CO₂ Reduced', trend: '+15% this month', color: '#6366f1' },
+  { icon: '🤝', value: 487, label: 'Active Volunteers', trend: '+23 this week', color: '#ccff00' },
 ];
 
 const STEPS = [
@@ -85,12 +85,14 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hero-visual" style={{ animation: 'fadeInUp 0.8s ease 0.3s both' }}>
+          <div className="hero-visual" style={{ animation: 'fadeInUp 1s ease 0.3s both' }}>
             <div style={{
-              width: 'clamp(220px, 40vw, 340px)', height: 'clamp(220px, 40vw, 340px)', borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(6,182,212,0.08) 50%, transparent 70%)',
+              width: 'clamp(220px, 40vw, 380px)', height: 'clamp(220px, 40vw, 380px)', borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(0,255,159,0.12) 0%, rgba(99,102,241,0.08) 50%, transparent 70%)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              position: 'relative', animation: 'float 6s ease-in-out infinite',
+              position: 'relative', animation: 'float 8s ease-in-out infinite',
+              border: '1px solid rgba(255,255,255,0.05)',
+              backdropFilter: 'blur(10px)',
             }}>
               <span style={{ fontSize: 'clamp(4rem, 10vw, 8rem)' }}>🍱</span>
               <div style={{
