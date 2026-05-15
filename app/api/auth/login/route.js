@@ -28,7 +28,15 @@ export async function POST(request) {
     return NextResponse.json({ success: true, user: safeUser });
 
   } catch (error) {
-    console.error('Login error:', error);
-    return NextResponse.json({ success: false, error: 'Login failed. Please try again.' }, { status: 500 });
+    console.error('Login error details:', {
+      message: error.message,
+      stack: error.stack,
+      code: error.code
+    });
+    return NextResponse.json({ 
+      success: false, 
+      error: 'Login failed. Please try again.',
+      debug: process.env.NODE_ENV === 'development' ? error.message : undefined 
+    }, { status: 500 });
   }
 }
